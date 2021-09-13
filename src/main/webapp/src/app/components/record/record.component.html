@@ -1,0 +1,92 @@
+<div class="section is-size-7">
+  <div class="field has-addons">
+    <p class="control">
+      <button class="button is-static is-small">Filter</button>
+    </p>
+    <p class="control is-expanded">
+      <input class="input is-small" type="text" placeholder="(CN=whatever | sAMAccountName=whatever | etc)" [(ngModel)]="searchFilter" />
+    </p>
+    <p class="control">
+      <button class="button is-static is-small">Base</button>
+    </p>
+    <p class="control">
+      <input class="input is-small" type="text" placeholder="Optional (OU=users | OU=groups | etc)" [(ngModel)]="searchBase" />
+    </p>
+    <p class="control">
+      <button class="button is-info is-small" (click)="search()">
+        Search
+      </button>
+    </p>
+    <p class="control">
+      <button class="button is-small" [class.is-danger]="!debug" [class.is-success]="debug" (click)="debug = !debug">
+        Debug
+      </button>
+    </p>
+  </div>
+</div>
+<div class="section is-size-7">
+  <div class="columns">
+    <div class="column is-narrow">
+      <div *ngIf="searchResult$ | async as searchResult">
+        <div>
+          <ul>
+            <li *ngFor="let result of searchResult.result" (click)="searchExact(result['dn'])">{{ result['dn'] }}</li>
+          </ul>
+        </div>
+        <div *ngIf="debug">
+          <pre>{{ searchResult | json }}</pre>
+        </div>
+      </div>
+    </div>
+    <div class="column is-fullwidth">
+      <div *ngIf="record$ | async as record">
+        <table class="table is-fullwidth is-bordered is-striped is-hoverable is-narrow">
+          <thead>
+            <tr>
+              <th>Key</th>
+              <th>Value(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CN</td>
+              <td>{{ record.record[0].cn }}</td>
+            </tr>
+            <tr>
+              <td>DN</td>
+              <td>{{ record.record[0]['dn'] }}</td>
+            </tr>
+            <tr>
+              <td>ObjectClasses</td>
+              <td>{{ record.record[0].objectClass.join(', ') }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="record.record[0].member">
+          <h1 class="heading">Members</h1>
+          <ul>
+            <li *ngFor="let member of record.record[0].member" (click)="searchExact(member)">{{ member }}</li>
+          </ul>
+        </div>
+        <h1 class="heading">Groups</h1>
+        <div *ngIf="record.memberOf">
+          <ul>
+            <li *ngFor="let group of record.memberOf" (click)="searchExact(group)">{{ group }}</li>
+          </ul>
+        </div>
+  <!--      <div>-->
+  <!--        <p>DisplayName: {{ record.user[0].displayName }}</p>-->
+  <!--      </div>-->
+  <!--      <div>-->
+  <!--        <p>Groups</p>-->
+  <!--        <p *ngFor="let group of record.memberOf">{{ group }}</p>-->
+  <!--      </div>-->
+        <div *ngIf="debug">
+          <pre>{{ record | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

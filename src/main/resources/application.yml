@@ -1,0 +1,10 @@
+
+ldapchamp:
+  dn-key: entryDN
+  url: ldap://10.10.10.201:10389
+  base: DC=example,DC=com
+  user-dn: cn=jsmith,ou=users,dc=example,dc=com
+  password: password
+  ignore-partial-result-exception: true
+server:
+  port: 8080
