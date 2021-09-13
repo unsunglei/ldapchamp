@@ -85,11 +85,12 @@ public class LdapController {
     }
 
     public List<String> unwrap(Attribute attribute) throws NamingException {
+        log.debug("Unwrapping: {}", attribute.getID());
         List<String> result = new ArrayList<>();
         var attrs = attribute.getAll();
         while(attrs.hasMore()) {
             var next = attrs.next();
-            result.add((String) next);
+            result.add(next.toString());
         }
         return result;
     }
