@@ -30,6 +30,9 @@ public class LdapController {
     @Value("${ldapchamp.dn-key}")
     private String dnKey;
 
+    @Value("${ldapchamp.dn-replacements}")
+    private String dnReplacements = "entryDN";
+
     public LdapController(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
     }
@@ -122,17 +125,27 @@ public class LdapController {
                 Map<String, Object> result = new LinkedHashMap<>();
                 log.info("{}", attributes);
                 var attrs = attributes.getAll();
+
+                boolean isDnKey = false;
+
                 while(attrs.hasMore()) {
                     var next = attrs.next();
                     var id = next.getID();
                     // map all "dn" variants to dn
-                    if(id.equalsIgnoreCase("entryDN")) {
-                        id = "dn";
+                    for(String replacement : dnReplacements.split(",")) {
+                        if(id.equalsIgnoreCase(replacement)) {
+                            id = "dn";
+                            isDnKey = true;
+                        }
                     }
                     if(next.size() > 1 || id.equalsIgnoreCase("member")) {
                         result.put(id, unwrap(next));
                     } else {
                         result.put(id, next.get());
+                        if(isDnKey) {
+                            // add the original DN key too
+                            result.put(next.getID(), next.get());
+                        }
                     }
                 }
                 return result;

@@ -6,5 +6,6 @@ ldapchamp:
   user-dn: cn=jsmith,ou=users,dc=example,dc=com
   password: password
   ignore-partial-result-exception: true
+  dn-replacements: entryDN,distinguishedName
 server:
   port: 8080
