@@ -1,4 +1,6 @@
-
+logging:
+  level:
+    com.example: debug
 ldapchamp:
   dn-key: entryDN
   url: ldap://10.10.10.201:10389
@@ -7,5 +9,6 @@ ldapchamp:
   password: password
   ignore-partial-result-exception: true
   dn-replacements: entryDN,distinguishedName
+  skipped-properties: userPassword
 server:
   port: 8080

@@ -16,6 +16,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +34,9 @@ public class LdapController {
 
     @Value("${ldapchamp.dn-replacements}")
     private String dnReplacements = "entryDN";
+
+    @Value("${ldapchamp.skipped-properties}")
+    private String skippedProperties = "userPassword";
 
     public LdapController(LdapTemplate ldapTemplate) {
         this.ldapTemplate = ldapTemplate;
@@ -125,7 +129,7 @@ public class LdapController {
             @Override
             public Map<String, Object> mapFromAttributes(Attributes attributes) throws NamingException {
                 Map<String, Object> result = new LinkedHashMap<>();
-                log.info("{}", attributes);
+                log.debug("{}", attributes);
                 var attrs = attributes.getAll();
 
                 boolean isDnKey = false;
@@ -133,6 +137,13 @@ public class LdapController {
                 while(attrs.hasMore()) {
                     var next = attrs.next();
                     var id = next.getID();
+
+                    boolean skipProperty = Arrays.stream(skippedProperties.split(",")).anyMatch(prop -> prop.equalsIgnoreCase(next.getID()));
+                    if(skipProperty) {
+                        log.debug("Skipping property: {}. skippedProperties list: {}", id, skippedProperties);
+                        continue;
+                    }
+
                     // map all "dn" variants to dn
                     for(String replacement : dnReplacements.split(",")) {
                         if(id.equalsIgnoreCase(replacement)) {
