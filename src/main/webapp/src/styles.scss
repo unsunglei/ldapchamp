@@ -1,1 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+.button.is-static {
+  color: black!important; // bulmaswatch darkly is-static is unreadable
+}
+
+body {
+  max-width: 1560px;
+  margin: auto!important;
+}

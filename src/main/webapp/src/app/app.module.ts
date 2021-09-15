@@ -6,11 +6,13 @@ import { AppComponent } from './app.component';
 import { RecordComponent } from './components/record/record.component';
 import { HttpClientModule } from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    RecordComponent
+    RecordComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
