@@ -16,6 +16,7 @@ import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,6 +96,7 @@ public class LdapController {
             var next = attrs.next();
             result.add(next.toString());
         }
+        Collections.sort(result);
         return result;
     }
 
